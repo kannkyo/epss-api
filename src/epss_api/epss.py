@@ -69,11 +69,11 @@ class EPSS(object):
 
         Example
 
-            [
-                {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.94031'},
-                {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
-                ...
-            ]
+        [
+        {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.94031'},
+        {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
+        ...
+        ]
 
         Returns:
             list: EPSS score's csv list
