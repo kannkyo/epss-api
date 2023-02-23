@@ -1,2 +1,0 @@
-# epss-api
-EPSS API

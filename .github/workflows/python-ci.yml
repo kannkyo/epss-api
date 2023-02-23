@@ -1,0 +1,117 @@
+name: Python CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 15 * * 0"
+
+permissions: read-all
+
+# Allow one concurrent test because of NVD API interval limitation
+concurrency:
+  group: "ci"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: # for EnricoMi/publish-unit-test-result-action
+      checks: write
+      pull-requests: write # for comment_mode
+      contents: read # only for private repository
+      issues: read # only for private repository
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+        poetry-version: ["1.2.2"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+
+      - name: Setup python environment
+        uses: ./.github/actions/python-setup
+        with:
+          python-version: ${{ matrix.python-version }}
+          poetry-version: ${{ matrix.poetry-version }}
+
+      - name: Lint python code by flake8
+        continue-on-error: true
+        run: poetry run flake8 src/ tests/ --exclude=src/nvd_api/low_api --format junit-xml --output-file report.xml
+
+      - name: Lint python code by flake8
+        continue-on-error: true
+        run: poetry run flake8 src/ tests/ --exclude=src/nvd_api/low_api --format html --htmldir=flake8
+
+      - name: Publish flake8 report to PR
+        uses: EnricoMi/publish-unit-test-result-action@26dda2fabf18a9c6329223e653166444edbb7e78
+        with:
+          check_name: flake8 results
+          junit_files: report.xml
+
+      - name: Upload flake8 report to artifact
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
+        with:
+          name: flake8-report
+          path: flake8/
+
+      - name: Test python code by pytest
+        continue-on-error: true
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: poetry run pytest
+
+      - name: Publish pytest report to PR
+        uses: EnricoMi/publish-unit-test-result-action@26dda2fabf18a9c6329223e653166444edbb7e78
+        with:
+          check_name: pytest results
+          junit_files: report.xml
+
+      - name: Upload pytest coverage report to artifact
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
+        with:
+          name: pytest-cov-report
+          path: htmlcov/
+
+      - name: Upload pytest report to artifact
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
+        with:
+          name: pytest-report
+          path: report.html
+
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          files: ./coverage.xml
+          flags: unittests
+          verbose: true
+
+  sast-codeql:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["python"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@17573ee1cc1b9d061760f3a006fc4aac4f944fd5
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Build automatically
+        uses: github/codeql-action/autobuild@17573ee1cc1b9d061760f3a006fc4aac4f944fd5
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@17573ee1cc1b9d061760f3a006fc4aac4f944fd5
