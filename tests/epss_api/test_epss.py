@@ -9,15 +9,21 @@ epss = EPSS()
 
 
 def test_score():
-    score = epss.score(cve_id='CVE-2022-0669')
-    assert score == {'epss': 0.0095, 'percentile': 0.32069}
+    value = epss.score(cve_id='CVE-2022-0669')
+    assert value == {'epss': 0.0095, 'percentile': 0.32069}
+    value = epss.score(cve_id='CVE-1000-123')
+    assert value is None
 
 
 def test_epss():
     value = epss.epss(cve_id='CVE-2022-0669')
     assert value == 0.0095
+    value = epss.epss(cve_id='CVE-1000-123')
+    assert value is None
 
 
 def test_percentile():
     value = epss.percentile(cve_id='CVE-2022-0669')
     assert value == 0.32069
+    value = epss.percentile(cve_id='CVE-1000-123')
+    assert value is None
