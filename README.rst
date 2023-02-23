@@ -39,6 +39,7 @@ Usage
 EPSS has only 4 methods.
 
 .. code-block:: python
+
     from epss_api import EPSS
 
     client = EPSS()
