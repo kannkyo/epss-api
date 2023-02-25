@@ -14,6 +14,9 @@ EPSS API Client
 .. image:: https://github.com/kannkyo/epss-api/actions/workflows/scorecards.yml/badge.svg
     :target: https://github.com/kannkyo/epss-api/actions/workflows/scorecards.yml
 
+.. image:: https://img.shields.io/pypi/dw/epss-api?style=plastic
+   :alt: PyPI - Downloads
+
 EPSS(Exploit Prediction Scoring System) API client.
 
 EPSS is the one of famous vulnerability score developed by FIRST (the Forum of Incident Response and Security Teams).
