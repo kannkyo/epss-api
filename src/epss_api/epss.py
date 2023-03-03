@@ -1,8 +1,16 @@
-# %%
 import csv
 from functools import cached_property
 from gzip import GzipFile
 from urllib.request import urlopen
+
+
+class Score(object):
+    """ EPSS Score Object"""
+
+    def __init__(self, cve: str, epss: str, percentile: str):
+        self.cve = cve
+        self.epss = float(epss)
+        self.percentile = float(percentile)
 
 
 class EPSS(object):
@@ -10,7 +18,7 @@ class EPSS(object):
         pass
 
     def _filter_by_cve_id(self, cve_id: str):
-        cve_filter = filter(lambda x: x['cve'] == cve_id, self.scores)
+        cve_filter = filter(lambda x: x.cve == cve_id, self.scores())
         rows = [row for row in cve_filter]
         return rows
 
@@ -25,7 +33,7 @@ class EPSS(object):
         """
         rows = self._filter_by_cve_id(cve_id)
         if len(rows) == 1:
-            return float(rows[0]['epss'])
+            return rows[0].epss
         else:
             return None
 
@@ -40,32 +48,30 @@ class EPSS(object):
         """
         rows = self._filter_by_cve_id(cve_id)
         if len(rows) == 1:
-            return float(rows[0]['percentile'])
+            return rows[0].percentile
         else:
             return None
 
-    def score(self, cve_id: str):
+    def score(self, cve_id: str) -> Score:
         """Get EPSS score and percentile
 
         Example
-            {'epss': 0.0095, 'percentile': 0.32069}
+            {'cve': 'CVE-2022-39952', 'epss': 0.0095, 'percentile': 0.32069}
 
         Args:
             cve_id (str): CVE ID (CVE-nnnn)
 
         Returns:
-            list | None: EPSS score percentile
+            Score | None: EPSS score percentile
         """
         rows = self._filter_by_cve_id(cve_id)
         if len(rows) == 1:
-            return {'epss': float(rows[0]['epss']),
-                    'percentile': float(rows[0]['percentile'])}
+            return rows[0]
         else:
             return None
 
-    @cached_property
-    def scores(self):
-        """Download EPSS scores (downloaded data is cached in memory)
+    def scores(self) -> list[Score]:
+        """Get all CVE's EPSS scores (downloaded data is cached in memory)
 
         Example
 
@@ -76,14 +82,18 @@ class EPSS(object):
         ]
 
         Returns:
-            list: EPSS score's csv list
+            list[Score]: EPSS score's csv list
         """
+        return self._csv
+
+    @cached_property
+    def _csv(self) -> list[Score]:
         url = 'https://epss.cyentia.com/epss_scores-current.csv.gz'
         with urlopen(url) as res:
             dec = GzipFile(fileobj=res)
             epss_scores_str: str = dec.read().decode("utf-8")
             epss_scores_list = epss_scores_str.split('\n')
             scores = [row for row in csv.DictReader(epss_scores_list[1:])]
-        return scores
 
-# %%
+        return [Score(row['cve'], row['epss'], row['percentile'])
+                for row in scores]

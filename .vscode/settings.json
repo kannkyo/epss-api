@@ -24,5 +24,9 @@
   },
   "python.autoComplete.extraPaths": [
     "src/epss_api"
-  ]
+  ],
+  "python.analysis.extraPaths": [
+    "src/epss_api"
+  ],
+  "esbonio.sphinx.confDir": ""
 }
