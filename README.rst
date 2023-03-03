@@ -47,7 +47,7 @@ EPSS has only 4 methods.
 
     client = EPSS()
 
-    value = client.scores
+    value = client.scores()
     # value = [
     #   {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.94031'},
     #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
@@ -55,7 +55,7 @@ EPSS has only 4 methods.
     # ]
 
     value = client.score(cve_id='CVE-2022-0669')
-    # value = {'epss': 0.0095, 'percentile': 0.32069}
+    # value = {'cve': 'CVE-2022-39952', 'epss': 0.0095, 'percentile': 0.32069}
 
     value = client.epss(cve_id='CVE-2022-0669')
     # value == 0.0095
