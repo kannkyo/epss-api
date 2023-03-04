@@ -12,4 +12,4 @@ permissions: read-all
 
 jobs:
   Reuse:
-    uses: ./boilerplate-language/boilerplate-python/.github/workflows/scorecards.yml@main
+    uses: boilerplate-language/boilerplate-base/.github/workflows/scorecards.yml@main
