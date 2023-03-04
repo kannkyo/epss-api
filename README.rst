@@ -39,7 +39,7 @@ This package is most easiest and efficient EPSS api client.
 Usage
 =============
 
-EPSS has only 4 methods.
+EPSS has some methods.
 
 .. code-block:: python
 
@@ -50,6 +50,34 @@ EPSS has only 4 methods.
     value = client.scores()
     # value = [
     #   {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.94031'},
+    #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
+    #  ...
+    # ]
+
+    value = client.epss_lt(0.5)
+    # value = [
+    #   {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.24031'},
+    #   {'cve': 'CVE-2023-0669', 'epss': '0.18437', 'percentile': '0.19452'},
+    #  ...
+    # ]
+
+    value = client.percentile_lt(0.5)
+    # value = [
+    #   {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.24031'},
+    #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.19452'},
+    #  ...
+    # ]
+
+    value = client.epss_gt(0.5)
+    # value = [
+    #   {'cve': 'CVE-2022-39952', 'epss': '0.59029', 'percentile': '0.94031'},
+    #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
+    #  ...
+    # ]
+
+    value = client.percentile_gt(0.5)
+    # value = [
+    #   {'cve': 'CVE-2022-39952', 'epss': '0.59029', 'percentile': '0.94031'},
     #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
     #  ...
     # ]

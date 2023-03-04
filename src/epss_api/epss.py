@@ -22,7 +22,57 @@ class EPSS(object):
         rows = [row for row in cve_filter]
         return rows
 
-    def epss(self, cve_id: str):
+    def epss_gt(self, max: float) -> list[Score]:
+        """Get CVEs with EPSS score greater or equal than the parameter
+
+        Args:
+            max (float): limit of EPSS score
+
+        Returns:
+            list[Score] | None: EPSS score object list
+        """
+        rows = [r for r in filter(lambda x: x.epss >= max, self.scores())]
+        return rows
+
+    def percentile_gt(self, max: float) -> list[Score]:
+        """Get CVEs with percentile greater or equal than the parameter
+
+        Args:
+            max (float): limit of EPSS score
+
+        Returns:
+            list[Score] | None: EPSS score object list
+        """
+        rows = [r for r in
+                filter(lambda x: x.percentile >= max, self.scores())]
+        return rows
+
+    def epss_lt(self, min: float) -> list[Score]:
+        """Get CVEs with EPSS score lower or equal than the parameter
+
+        Args:
+            min (float): limit of EPSS score
+
+        Returns:
+            list[Score] | None: EPSS score object list
+        """
+        rows = [r for r in filter(lambda x: x.epss <= min, self.scores())]
+        return rows
+
+    def percentile_lt(self, min: float) -> list[Score]:
+        """Get CVEs with percentile lower or equal than the parameter
+
+        Args:
+            min (float): limit of EPSS score
+
+        Returns:
+            list[Score] | None: EPSS score object list
+        """
+        rows = [r for r in
+                filter(lambda x: x.percentile <= min, self.scores())]
+        return rows
+
+    def epss(self, cve_id: str) -> float:
         """Get EPSS score
 
         Args:
@@ -37,7 +87,7 @@ class EPSS(object):
         else:
             return None
 
-    def percentile(self, cve_id: str):
+    def percentile(self, cve_id: str) -> float:
         """Get EPSS percentile
 
         Args:
