@@ -8,11 +8,10 @@ on:
   schedule:
     - cron: "50 6 * * 6"
 
-permissions: read-all
+permissions:
+  security-events: write
+  id-token: write # Used to receive a badge. (Upcoming feature)
 
 jobs:
-  permissions:
-    security-events: write
-    id-token: write # Used to receive a badge. (Upcoming feature)
   Reuse:
     uses: boilerplate-language/boilerplate-base/.github/workflows/scorecards.yml@main
