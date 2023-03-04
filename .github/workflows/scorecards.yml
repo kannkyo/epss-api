@@ -11,43 +11,5 @@ on:
 permissions: read-all
 
 jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      id-token: write # Used to receive a badge. (Upcoming feature)
-      contents: read # Needs for private repositories.
-      actions: read # Needs for private repositories.
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
-        with:
-          persist-credentials: false
-
-      - name: Scan by Scorecard
-        uses: ossf/scorecard-action@e38b1902ae4f44df626f11ba0734b14fb91f8f86
-        with:
-          results_file: results.sarif
-          results_format: sarif
-          # (Optional) Read-only PAT token. Uncomment the `repo_token` line below if:
-          # - you want to enable the Branch-Protection check on a *public* repository, or
-          # - you are installing Scorecards on a *private* repository
-          # To create the PAT, follow the steps in https://github.com/ossf/scorecard-action#authentication-with-pat.
-          repo_token: ${{ secrets.SCORECARD_READ_TOKEN }}
-
-          # Publish the results for public repositories to enable scorecard badges. For more details, see
-          # https://github.com/ossf/scorecard-action#publishing-results.
-          # For private repositories, `publish_results` will automatically be set to `false`, regardless
-          # of the value entered here.
-          publish_results: true
-
-      - name: Upload Scorecard report to artifact
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
-        with:
-          name: SARIF file
-          path: results.sarif
-
-      - name: Publish Scorecard report to GitHub Security
-        uses: github/codeql-action/upload-sarif@32dc499307d133bb5085bae78498c0ac2cf762d5
-        with:
-          sarif_file: results.sarif
+  Reuse:
+    uses: ./boilerplate-language/boilerplate-python/.github/workflows/scorecards.yml@main

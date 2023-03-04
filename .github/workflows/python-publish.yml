@@ -20,17 +20,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: false
-          prerelease: false
-
       - name: Setup python environment
         uses: ./.github/actions/python-setup
 
@@ -39,8 +28,8 @@ jobs:
         run: |
           poetry run sbom
           poetry build
-          echo "::set-output name=package_tar::`ls dist/ | grep .tar.gz`"
-          echo "::set-output name=package_whl::`ls dist/ | grep .whl`"
+          echo "package_tar=`ls dist/ | grep .tar.gz`" >> $GITHUB_OUTPUT
+          echo "package_whl=`ls dist/ | grep .whl`" >> $GITHUB_OUTPUT
 
       - name: Upload package to artifact
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
@@ -49,24 +38,14 @@ jobs:
           path: dist/
 
       - name: Upload package to release asset
-        uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/${{ steps.build.outputs.package_tar }}
-          asset_name: ${{ steps.build.outputs.package_tar }}
-          asset_content_type: application/zip
-
-      - name: Upload package to release asset
-        uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/${{ steps.build.outputs.package_whl }}
-          asset_name: ${{ steps.build.outputs.package_whl }}
-          asset_content_type: application/zip
+          generate_release_notes: true
+          files: |
+            dist/${{ steps.build.outputs.package_tar }}
+            dist/${{ steps.build.outputs.package_whl }}
 
       - name: Upload package to pypi
         uses: pypa/gh-action-pypi-publish@c7f29f7adef1a245bd91520e94867e5c6eedddcc
