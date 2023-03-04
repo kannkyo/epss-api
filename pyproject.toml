@@ -12,7 +12,7 @@ keywords = ["EPSS", "security", "vulnerability"]
 name = "epss-api"
 readme = "README.rst"
 repository = "https://github.com/kannkyo/epss-api"
-version = "0.2.2"
+version = "1.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.8"
