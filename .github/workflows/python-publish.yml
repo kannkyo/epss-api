@@ -26,7 +26,7 @@ jobs:
       - name: Build package
         id: build
         run: |
-          poetry run sbom
+          poetry run seman sbom
           poetry build
           echo "package_tar=`ls dist/ | grep .tar.gz`" >> $GITHUB_OUTPUT
           echo "package_whl=`ls dist/ | grep .whl`" >> $GITHUB_OUTPUT

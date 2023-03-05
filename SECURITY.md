@@ -17,3 +17,7 @@ Please report a vulnerability by [security advisories](https://github.com/kannky
 * Patches : Has the problem been patched? What versions should users upgrade to?
 * Workarounds : Is there a way for users to fix or remediate the vulnerability without upgrading?
 * References : Are there any links users can visit to find out more?
+
+## SBOM
+
+SBOM (Cyclonedx format) is automatically generated and included in package as `sbom.xml`.
