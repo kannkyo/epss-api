@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
 
       - name: Review license
-        uses: actions/dependency-review-action@c74b580d73376b7750d3d2a50bfb8adc2c937507
+        uses: actions/dependency-review-action@9129d7d40b8c12c1ed0f60400d00c92d437adcce
         with:
           fail-on-severity: high
           deny-licenses: AGPL-1.0-only, AGPL-1.0-or-later, AGPL-3.0-only, AGPL-3.0-or-later, GPL-1.0-only, GPL-1.0-or-later, GPL-2.0-only, GPL-2.0-or-later, GPL-3.0-only, GPL-3.0-or-later, LGPL-2.0-only, LGPL-2.0-or-later, LGPL-2.1-only, LGPL-2.1-or-later, LGPL-3.0-only, LGPL-3.0-or-later
