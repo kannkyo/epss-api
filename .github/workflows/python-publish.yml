@@ -38,7 +38,7 @@ jobs:
           path: dist/
 
       - name: Upload package to release asset
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
+        uses: softprops/action-gh-release@3198ee18f814cdf787321b4a32a26ddbf37acc52
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
