@@ -43,7 +43,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Review license
         uses: actions/dependency-review-action@3b139cfc5fae8b618d3eae3675e383bb1769c019
