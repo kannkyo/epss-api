@@ -1,16 +1,22 @@
 from __future__ import annotations
 
 import csv
-from functools import cached_property
 from gzip import GzipFile
 from urllib.request import urlopen
-from bisect import bisect_left
+from bisect import bisect_right, bisect_left
 
 
 class Score(object):
     """ EPSS Score Object"""
 
     def __init__(self, cve: str, epss: str, percentile: str):
+        """Initialize EPSS Score Object 
+
+        Args:
+            cve (str): CVE-yyyy-n
+            epss (str): [0-1]
+            percentile (str): [0-1]
+        """
         self.cve = cve
         self.epss = float(epss)
         self.percentile = float(percentile)
@@ -30,9 +36,15 @@ class EPSS(object):
 
         scores = [row for row in csv.DictReader(self._download[1:])]
 
-        self._byCVE = {row['cve'] : Score(row['cve'], row['epss'], row['percentile']) for row in scores}
+        self._byCVE = {row['cve']:
+                       Score(row['cve'], row['epss'], row['percentile'])
+                       for row in scores}
 
-        self._sortedScores = sorted(self._byCVE.values(),key=lambda x:x.percentile) 
+        self._sortedScoresByPercentile = sorted(self._byCVE.values(),
+                                                key=lambda x: x.percentile)
+
+        self._sortedScoresByEpss = sorted(self._byCVE.values(),
+                                          key=lambda x: x.epss)
 
     def scores(self) -> list[Score]:
         """Get all CVE's EPSS scores (downloaded data is cached in memory)
@@ -48,7 +60,7 @@ class EPSS(object):
         Returns:
             list[Score]: EPSS score's csv list
         """
-        return list(self._sortedScores)
+        return list(self._sortedScoresByEpss)
 
     def score(self, cve_id: str) -> Score:
         """Get EPSS score and percentile
@@ -63,7 +75,7 @@ class EPSS(object):
             Score | None: EPSS score percentile
         """
 
-        return self._byCVE.get(cve_id,None)
+        return self._byCVE.get(cve_id, None)
 
     def epss(self, cve_id: str) -> float:
         """Get EPSS score
@@ -74,8 +86,8 @@ class EPSS(object):
         Returns:
             float | None: EPSS score (0.0-1.0)
         """
-        
-        score = self._byCVE.get(cve_id,None)
+
+        score = self._byCVE.get(cve_id, None)
         if score is None:
             return None
         else:
@@ -90,40 +102,14 @@ class EPSS(object):
         Returns:
             float | None: EPSS percentile (0.0-1.0)
         """
-        score = self._byCVE.get(cve_id,None)
+        score = self._byCVE.get(cve_id, None)
         if score is None:
             return None
         else:
             return score.percentile
 
-    def epss_gt(self, max: float) -> list[Score]:
-        """Get CVEs with EPSS score greater or equal than the parameter
-
-        Args:
-            max (float): limit of EPSS score
-
-        Returns:
-            list[Score] | None: EPSS score object list
-        """
-        i = bisect_left(self._sortedScores,min,key=lambda x:x.epss)
-        
-        return list(self._sortedScores[i:])
-
-    def percentile_gt(self, max: float) -> list[Score]:
-        """Get CVEs with percentile greater or equal than the parameter
-
-        Args:
-            max (float): limit of EPSS score
-
-        Returns:
-            list[Score] | None: EPSS score object list
-        """
-        i = bisect_left(self._sortedScores,min,key=lambda x:x.percentile)
-        
-        return list(self._sortedScores[i:])
-
-    def epss_lt(self, min: float) -> list[Score]:
-        """Get CVEs with EPSS score lower or equal than the parameter
+    def epss_gt(self, min: float) -> list[Score]:
+        """Get CVEs with EPSS score greater than the parameter
 
         Args:
             min (float): limit of EPSS score
@@ -131,22 +117,52 @@ class EPSS(object):
         Returns:
             list[Score] | None: EPSS score object list
         """
-        i = bisect_left(self._sortedScores[::-1],min,key=lambda x:1-x.epss)
-        
-        return list(self._sortedScores[:len(self.sortedScores)-i])
+        i = bisect_right(self._sortedScoresByEpss, min,
+                         key=lambda x: x.epss)
 
-    def percentile_lt(self, min: float) -> list[Score]:
-        """Get CVEs with percentile lower or equal than the parameter
+        return list(self._sortedScoresByEpss[i:])
+
+    def percentile_gt(self, min: float) -> list[Score]:
+        """Get CVEs with percentile greater than the parameter
 
         Args:
-            min (float): limit of EPSS score
+            min (float): limit of percentile
 
         Returns:
             list[Score] | None: EPSS score object list
         """
-        i = bisect_left(self._sortedScores[::-1],min,key=lambda x:1-x.percentile)
-        
-        return list(self._sortedScores[:len(self.sortedScores)-i])
+        i = bisect_right(self._sortedScoresByPercentile, min,
+                         key=lambda x: x.percentile)
+
+        return list(self._sortedScoresByPercentile[i:])
+
+    def epss_lt(self, max: float) -> list[Score]:
+        """Get CVEs with EPSS score lower than the parameter
+
+        Args:
+            max (float): limit of EPSS score
+
+        Returns:
+            list[Score] | []: EPSS score object list
+        """
+        i = bisect_left(self._sortedScoresByEpss, max,
+                        key=lambda x: x.epss)
+
+        return list(self._sortedScoresByEpss[:i])
+
+    def percentile_lt(self, max: float) -> list[Score]:
+        """Get CVEs with percentile lower than the parameter
+
+        Args:
+            max (float): limit of percentile
+
+        Returns:
+            list[Score] | []: EPSS score object list
+        """
+        i = bisect_left(self._sortedScoresByPercentile, max,
+                        key=lambda x: x.percentile)
+
+        return list(self._sortedScoresByPercentile[:i])
 
     def csv(self) -> list[str]:
         """Get csv data containing all epss scores.
@@ -162,4 +178,3 @@ class EPSS(object):
             list[str]: csv data
         """
         return self._download
-
