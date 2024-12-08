@@ -24,55 +24,63 @@ def test_csv():
     assert len(rows[2:]) >= 1000
 
 
-@pytest.mark.parametrize("max", [-1, 0, 0.5, 1, 2])
-def test_epss_gt(max):
-    value = epss.epss_gt(max)
-    for s in value:
-        assert s.epss >= max
-
-
-@pytest.mark.parametrize("max", [-1, 0, 0.5, 1, 2])
-def test_percentile_gt(max):
-    value = epss.percentile_gt(max)
-    for s in value:
-        assert s.percentile >= max
-
-
 @pytest.mark.parametrize("min", [-1, 0, 0.5, 1, 2])
-def test_epss_lt(min):
-    value = epss.epss_lt(min)
-    for s in value:
+def test_epss_gt(min):
+    scores = epss.epss_gt(min)
+    for s in scores:
+        assert s.epss > min
+    for s in list(set(scores) - set(epss.scores())):
         assert s.epss <= min
 
 
 @pytest.mark.parametrize("min", [-1, 0, 0.5, 1, 2])
-def test_percentile_lt(min):
-    value = epss.percentile_lt(min)
-    for s in value:
+def test_percentile_gt(min):
+    scores = epss.percentile_gt(min)
+    for s in scores:
+        assert s.percentile > min
+    for s in list(set(scores) - set(epss.scores())):
         assert s.percentile <= min
 
 
+@pytest.mark.parametrize("max", [-1, 0, 0.5, 1, 2])
+def test_epss_lt(max):
+    scores = epss.epss_lt(max)
+    for s in scores:
+        assert s.epss < max
+    for s in list(set(scores) - set(epss.scores())):
+        assert s.epss >= max
+
+
+@pytest.mark.parametrize("max", [-1, 0, 0.5, 1, 2])
+def test_percentile_lt(max):
+    scores = epss.percentile_lt(max)
+    for s in scores:
+        assert s.percentile < max
+    for s in list(set(scores) - set(epss.scores())):
+        assert s.percentile >= max
+
+
 def test_score():
-    value = epss.score(cve_id='CVE-2022-0669')
-    assert value.cve.startswith('CVE-')
-    assert 0 <= value.epss <= 1
-    assert 0 <= value.percentile <= 1
-    value = epss.score(cve_id='CVE-1000-123')
-    assert value is None
+    score = epss.score(cve_id='CVE-2022-0669')
+    assert score.cve.startswith('CVE-')
+    assert 0 <= score.epss <= 1
+    assert 0 <= score.percentile <= 1
+    score = epss.score(cve_id='CVE-1000-123')
+    assert score is None
 
 
 def test_epss():
-    value = epss.epss(cve_id='CVE-2022-0669')
-    assert 0 <= value <= 1
-    value = epss.epss(cve_id='CVE-1000-123')
-    assert value is None
+    score = epss.epss(cve_id='CVE-2022-0669')
+    assert 0 <= score <= 1
+    score = epss.epss(cve_id='CVE-1000-123')
+    assert score is None
 
 
 def test_percentile():
-    value = epss.percentile(cve_id='CVE-2022-0669')
-    assert 0 <= value <= 1
-    value = epss.percentile(cve_id='CVE-1000-123')
-    assert value is None
+    score = epss.percentile(cve_id='CVE-2022-0669')
+    assert 0 <= score <= 1
+    score = epss.percentile(cve_id='CVE-1000-123')
+    assert score is None
 
 
 def test_score_dict():
