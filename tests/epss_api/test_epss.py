@@ -42,6 +42,24 @@ def test_percentile_gt(min):
         assert s.percentile <= min
 
 
+@pytest.mark.parametrize("min", [-1, 0, 0.5, 1, 2])
+def test_epss_ge(min):
+    scores = epss.epss_ge(min)
+    for s in scores:
+        assert s.epss >= min
+    for s in list(set(scores) - set(epss.scores())):
+        assert s.epss < min
+
+
+@pytest.mark.parametrize("min", [-1, 0, 0.5, 1, 2])
+def test_percentile_ge(min):
+    scores = epss.percentile_ge(min)
+    for s in scores:
+        assert s.percentile >= min
+    for s in list(set(scores) - set(epss.scores())):
+        assert s.percentile < min
+
+
 @pytest.mark.parametrize("max", [-1, 0, 0.5, 1, 2])
 def test_epss_lt(max):
     scores = epss.epss_lt(max)
@@ -58,6 +76,24 @@ def test_percentile_lt(max):
         assert s.percentile < max
     for s in list(set(scores) - set(epss.scores())):
         assert s.percentile >= max
+
+
+@pytest.mark.parametrize("max", [-1, 0, 0.5, 1, 2])
+def test_epss_le(max):
+    scores = epss.epss_le(max)
+    for s in scores:
+        assert s.epss <= max
+    for s in list(set(scores) - set(epss.scores())):
+        assert s.epss > max
+
+
+@pytest.mark.parametrize("max", [-1, 0, 0.5, 1, 2])
+def test_percentile_le(max):
+    scores = epss.percentile_le(max)
+    for s in scores:
+        assert s.percentile <= max
+    for s in list(set(scores) - set(epss.scores())):
+        assert s.percentile > max
 
 
 def test_score():
