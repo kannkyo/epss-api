@@ -10,7 +10,7 @@ class Score(object):
     """ EPSS Score Object"""
 
     def __init__(self, cve: str, epss: str, percentile: str):
-        """Initialize EPSS Score Object 
+        """Initialize EPSS Score Object
 
         Args:
             cve (str): CVE-yyyy-n
