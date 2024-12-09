@@ -10,7 +10,7 @@ class Score(object):
     """ EPSS Score Object"""
 
     def __init__(self, cve: str, epss: str, percentile: str):
-        """Initialize EPSS Score Object 
+        """Initialize EPSS Score Object
 
         Args:
             cve (str): CVE-yyyy-n
@@ -136,6 +136,34 @@ class EPSS(object):
 
         return list(self._sortedScoresByPercentile[i:])
 
+    def epss_ge(self, min: float) -> list[Score]:
+        """Get CVEs with EPSS score greater than or equal to the parameter
+
+        Args:
+            min (float): limit of EPSS score
+
+        Returns:
+            list[Score] | None: EPSS score object list
+        """
+        i = bisect_left(self._sortedScoresByEpss, min,
+                        key=lambda x: x.epss)
+
+        return list(self._sortedScoresByEpss[i:])
+
+    def percentile_ge(self, min: float) -> list[Score]:
+        """Get CVEs with percentile greater than or equal to the parameter
+
+        Args:
+            min (float): limit of percentile
+
+        Returns:
+            list[Score] | None: EPSS score object list
+        """
+        i = bisect_left(self._sortedScoresByPercentile, min,
+                        key=lambda x: x.percentile)
+
+        return list(self._sortedScoresByPercentile[i:])
+
     def epss_lt(self, max: float) -> list[Score]:
         """Get CVEs with EPSS score lower than the parameter
 
@@ -151,7 +179,7 @@ class EPSS(object):
         return list(self._sortedScoresByEpss[:i])
 
     def percentile_lt(self, max: float) -> list[Score]:
-        """Get CVEs with percentile lower than the parameter
+        """Get CVEs with percentile less than the parameter
 
         Args:
             max (float): limit of percentile
@@ -161,6 +189,34 @@ class EPSS(object):
         """
         i = bisect_left(self._sortedScoresByPercentile, max,
                         key=lambda x: x.percentile)
+
+        return list(self._sortedScoresByPercentile[:i])
+
+    def epss_le(self, max: float) -> list[Score]:
+        """Get CVEs with EPSS score less than or equal to the parameter
+
+        Args:
+            max (float): limit of EPSS score
+
+        Returns:
+            list[Score] | []: EPSS score object list
+        """
+        i = bisect_right(self._sortedScoresByEpss, max,
+                         key=lambda x: x.epss)
+
+        return list(self._sortedScoresByEpss[:i])
+
+    def percentile_le(self, max: float) -> list[Score]:
+        """Get CVEs with percentile less than or equal to the parameter
+
+        Args:
+            max (float): limit of percentile
+
+        Returns:
+            list[Score] | []: EPSS score object list
+        """
+        i = bisect_right(self._sortedScoresByPercentile, max,
+                         key=lambda x: x.percentile)
 
         return list(self._sortedScoresByPercentile[:i])
 
