@@ -9,6 +9,7 @@ documentation = "https://github.com/kannkyo/epss-api"
 homepage = "https://github.com/kannkyo/epss-api"
 include = ["sbom.xml"]
 keywords = ["EPSS", "security", "vulnerability"]
+license = "MIT"
 name = "epss-api"
 readme = "README.rst"
 repository = "https://github.com/kannkyo/epss-api"
