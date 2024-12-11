@@ -54,7 +54,7 @@ jobs:
 
       - name: Test python code by pytest
         continue-on-error: true
-        run: poetry run pytest
+        run: poetry run pytest --cov -o junit_family=legacy
 
       - name: Publish pytest report to PR
         uses: EnricoMi/publish-unit-test-result-action@170bf24d20d201b842d7a52403b73ed297e6645b
@@ -62,17 +62,24 @@ jobs:
           check_name: pytest results
           junit_files: report.xml
 
-      - name: Upload pytest coverage report to artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
+      - name: Upload test results to codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@9739113ad922ea0a9abb4b2c0f8bf6a4aa8ef820
         with:
-          name: pytest-cov-report
-          path: htmlcov/
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: report.xml
 
       - name: Upload pytest report to artifact
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
         with:
           name: pytest-report
           path: report.html
+
+      - name: Upload pytest coverage report to artifact
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
+        with:
+          name: pytest-cov-report
+          path: htmlcov/
 
       - name: Upload coverage to codecov
         uses: codecov/codecov-action@7f8b4b4bde536c465e797be725718b88c5d95e0e
