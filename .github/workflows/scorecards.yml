@@ -48,6 +48,6 @@ jobs:
           path: results.sarif
 
       - name: Publish Scorecard report to GitHub Security
-        uses: github/codeql-action/upload-sarif@cdcdbb579706841c47f7063dda365e292e5cad7a
+        uses: github/codeql-action/upload-sarif@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c
         with:
           sarif_file: results.sarif
