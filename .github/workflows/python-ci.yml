@@ -63,7 +63,7 @@ jobs:
           junit_files: report.xml
 
       - name: Upload test results to codecov
-        if: ${{ !cancelled() }}
+        if: ${{ github.ref_name == 'main' && !cancelled() }}
         uses: codecov/test-results-action@4e79e65778be1cecd5df25e14af1eafb6df80ea9
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -82,6 +82,7 @@ jobs:
           path: htmlcov/
 
       - name: Upload coverage to codecov
+        if: ${{ github.ref_name == 'main' && !cancelled() }}
         uses: codecov/codecov-action@13ce06bfc6bbe3ecf90edbbf1bc32fe5978ca1d3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
