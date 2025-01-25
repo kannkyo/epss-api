@@ -42,54 +42,48 @@ Usage
 EPSS has some methods.
 
 .. code-block:: python
+    >>> from epss_api import EPSS
+    >>> 
+    >>> client = EPSS()
 
-    from epss_api import EPSS
+    >>> print(client.scores()[0])
+    {'cve': 'CVE-1999-0013', 'epss': 0.00042, 'percentile': 0.05071}
 
-    client = EPSS()
+    >>> print(client.score('CVE-2024-0001'))
+    {'cve': 'CVE-2024-0001', 'epss': 0.00091, 'percentile': 0.4063}
 
-    value = client.scores()
-    # value = [
-    #   {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.94031'},
-    #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
-    #  ...
-    # ]
+    >>> print(client.csv()[1])
+    cve,epss,percentile
 
-    value = client.epss_lt(0.5)
-    # value = [
-    #   {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.24031'},
-    #   {'cve': 'CVE-2023-0669', 'epss': '0.18437', 'percentile': '0.19452'},
-    #  ...
-    # ]
+    >>> print(client.epss('CVE-2024-0001'))
+    0.00091
 
-    value = client.percentile_lt(0.5)
-    # value = [
-    #   {'cve': 'CVE-2022-39952', 'epss': '0.09029', 'percentile': '0.24031'},
-    #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.19452'},
-    #  ...
-    # ]
+    >>> print(client.epss_ge(0.50003)[0])
+    {'cve': 'CVE-2022-0651', 'epss': 0.50003, 'percentile': 0.97652}
 
-    value = client.epss_gt(0.5)
-    # value = [
-    #   {'cve': 'CVE-2022-39952', 'epss': '0.59029', 'percentile': '0.94031'},
-    #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
-    #  ...
-    # ]
+    >>> print(client.epss_gt(0.50003)[0])
+    {'cve': 'CVE-2018-0851', 'epss': 0.50036, 'percentile': 0.97653}
 
-    value = client.percentile_gt(0.5)
-    # value = [
-    #   {'cve': 'CVE-2022-39952', 'epss': '0.59029', 'percentile': '0.94031'},
-    #   {'cve': 'CVE-2023-0669', 'epss': '0.78437', 'percentile': '0.99452'},
-    #  ...
-    # ]
+    >>> print(client.epss_le(0.49982)[-1])
+    {'cve': 'CVE-2014-8074', 'epss': 0.49982, 'percentile': 0.97651}
 
-    value = client.score(cve_id='CVE-2022-0669')
-    # value = {'cve': 'CVE-2022-39952', 'epss': 0.0095, 'percentile': 0.32069}
+    >>> print(client.epss_lt(0.49982)[-1])
+    {'cve': 'CVE-2018-8011', 'epss': 0.49981, 'percentile': 0.97651}
 
-    value = client.epss(cve_id='CVE-2022-0669')
-    # value == 0.0095
+    >>> print(client.percentile('CVE-2024-0001'))
+    0.4063
 
-    value = client.percentile(cve_id='CVE-2022-0669')
-    # value == 0.32069
+    >>> print(client.percentile_ge(0.5)[0])
+    {'cve': 'CVE-2019-5426', 'epss': 0.00137, 'percentile': 0.5}
+
+    >>> print(client.percentile_gt(0.5)[0])
+    {'cve': 'CVE-2021-43464', 'epss': 0.00137, 'percentile': 0.50004}
+
+    >>> print(client.percentile_le(0.5)[-1])
+    {'cve': 'CVE-2022-27777', 'epss': 0.00137, 'percentile': 0.5}
+
+    >>> print(client.percentile_lt(0.5)[-1])
+    {'cve': 'CVE-2021-1625', 'epss': 0.00137, 'percentile': 0.49999}
 
 If you call either one method, EPSS client cache all CVE's score in memory.
 After caching, you can get all data very fast.

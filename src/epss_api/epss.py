@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import csv
+from bisect import bisect_left, bisect_right
 from gzip import GzipFile
 from urllib.request import urlopen
-from bisect import bisect_right, bisect_left
 
 
 class Score(object):
@@ -20,6 +20,9 @@ class Score(object):
         self.cve = cve
         self.epss = float(epss)
         self.percentile = float(percentile)
+
+    def __str__(self):
+        return f"{{'cve': '{self.cve}', 'epss': {self.epss}, 'percentile': {self.percentile}}}"
 
 
 class EPSS(object):
