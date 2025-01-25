@@ -22,7 +22,8 @@ class Score(object):
         self.percentile = float(percentile)
 
     def __str__(self):
-        return f"{{'cve': '{self.cve}', 'epss': {self.epss}, 'percentile': {self.percentile}}}"
+        return f"{{'cve': '{self.cve}', 'epss': {self.epss}, " \
+            + "'percentile': {self.percentile}}}"
 
 
 class EPSS(object):
