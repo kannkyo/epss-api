@@ -47,7 +47,7 @@ jobs:
           junit_files: report.xml
 
       - name: Upload flake8 report to artifact
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: flake8-report
           path: flake8/
@@ -70,13 +70,13 @@ jobs:
           files: report.xml
 
       - name: Upload pytest report to artifact
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: pytest-report
           path: report.html
 
       - name: Upload pytest coverage report to artifact
-        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: pytest-cov-report
           path: htmlcov/
