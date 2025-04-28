@@ -56,7 +56,7 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: attest build provenance
-        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2
+        uses: actions/attest-build-provenance@db473fddc028af60658334401dc6fa3ffd8669fd
         with:
           subject-path: |
             dist/${{ steps.build.outputs.package_tar }}
