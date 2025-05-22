@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload test results to codecov
         if: ${{ github.ref_name == 'main' && !cancelled() }}
-        uses: codecov/test-results-action@f2dba722c67b86c6caa034178c6e4d35335f6706
+        uses: codecov/test-results-action@47f89e9acb64b76debcd5ea40642d25a4adced9f
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: report.xml
