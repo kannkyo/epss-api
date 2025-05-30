@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
 
       - name: Scan by Scorecard
-        uses: ossf/scorecard-action@62b2cac7ed8198b15735ed49ab1e5cf35480ba46
+        uses: ossf/scorecard-action@05b42c624433fc40578a4040d5cf5e36ddca8cde
         with:
           results_file: results.sarif
           results_format: sarif
