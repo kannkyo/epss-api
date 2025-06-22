@@ -41,7 +41,8 @@ Usage
 
 EPSS has some methods.
 
-.. code-block:: python
+.. code-block:: bash
+
     >>> from epss_api import EPSS
     >>> 
     >>> client = EPSS()
