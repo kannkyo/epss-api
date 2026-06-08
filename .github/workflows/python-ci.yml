@@ -83,7 +83,7 @@ jobs:
 
       - name: Upload coverage to codecov
         if: ${{ github.ref_name == 'main' && !cancelled() }}
-        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           env_vars: OS,PYTHON
