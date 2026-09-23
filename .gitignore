@@ -131,3 +131,7 @@ dmypy.json
 .tmp
 report.html
 report.xml
+
+# graphify
+graphify-out/cost.json
+graphify-out/cache/
